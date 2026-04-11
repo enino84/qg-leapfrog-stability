@@ -1,7 +1,7 @@
 # qg-leapfrog-stability
 
 **Leapfrog time integration in a 1.5-layer quasi-geostrophic model:
-stability analysis, uncertainty propagation, and computational scaling**
+stability analysis, uncertainty propagation, and filter-induced dissipation**
 
 This repository contains the code and analysis scripts associated with the paper
 submitted to *Ocean Modelling*.
@@ -14,14 +14,18 @@ We implement the Leapfrog scheme with Robert-Asselin (RA) and
 Robert-Asselin-Williams (RAW) filters in a 1.5-layer quasi-geostrophic (QG)
 model, and carry out a systematic numerical analysis covering:
 
-- Spectral analysis of the linearised operator $J_\mathcal{F}$ and its
-  dependence on grid resolution
-- Stability regions in the complex plane for each time-stepping scheme
+- Replacement of the original Fortran multigrid Helmholtz solver with a direct
+  sparse LU factorization (SuperLU via SciPy), enabling unambiguous stability analysis
+- Eigenspectrum of the linearized operator $J_\mathcal{F}(q_\mathrm{eq})$ at two
+  grid resolutions (49×49 and 97×97), revealing resolution-dependent deviation
+  from the classical von Neumann bound
 - Maximum stable time step $\Delta t_{\max}$ as a function of grid spacing $h$
-- Lyapunov exponent estimation via the Benettin algorithm
-- Statistical uncertainty propagation: energy PDFs, enstrophy PDFs, and
-  power spectra across schemes
-- Computational cost scaling with model dimension
+- First estimate of the maximum Lyapunov exponent for this model
+  ($\sigma_1 = 0.0318$, $\tau_L = 31.5$ time units)
+- Statistical uncertainty propagation: kinetic energy and enstrophy PDFs,
+  energy spectra, and KL divergences across schemes
+- Sensitivity of filter-induced dissipation to the RA parameter
+  $\alpha \in \{0.05, 0.10, 0.20, 0.40\}$
 
 The QG model is a faithful Python port of the QG-C model by
 [Pavel Sakov (Bureau of Meteorology)](https://github.com/sakov/qg-c),
@@ -34,19 +38,18 @@ extended with the Leapfrog family of integrators.
 ```
 qg-leapfrog-stability/
 │
-├── qg_model.py              # QG model — all time-stepping schemes
-├── qg_viewer.py             # Interactive field viewer (.npz files)
+├── qg_model.py                  # QG model — all time-stepping schemes
+├── qg_viewer.py                 # Interactive field viewer (.npz files)
+├── run_all.sh                   # Single script to reproduce all results
 │
 ├── analysis/
+│   ├── plot_style.py            # Shared publication style settings
 │   ├── jacobian_spectrum.py     # Build J_F and compute eigenspectrum
 │   ├── stability_regions.py     # Plot eigenspectrum + stability regions
 │   ├── lyapunov.py              # Benettin algorithm for Lyapunov exponent
-│   └── uncertainty.py           # PDFs, power spectra, KL divergence
-│
-├── experiments/
-│   ├── run_reference.sh         # RK4 reference run from equilibrium state
-│   ├── run_leapfrog_sweep.sh    # Stability sweep: vary dt and alpha
-│   └── run_leapfrog_long.sh     # Long runs for statistical comparison
+│   ├── uncertainty.py           # PDFs, power spectra, KL divergence
+│   ├── plot_fields.py           # Spatial snapshots of streamfunction
+│   └── plot_alpha_sensitivity.py  # RA filter sensitivity figures
 │
 ├── data/
 │   └── README.md                # Instructions to reproduce the .npz files
@@ -84,52 +87,58 @@ No additional compiled extensions are required. The Helmholtz solver uses
 
 ## Reproducing the results
 
-### Step 1 — Generate the equilibrium initial condition
-
-The spin-up simulation (tend=100000, RK4, mrefin=6) must be run first.
-Its final record serves as the initial condition for all subsequent experiments.
+All steps are collected in a single script. Run from the root of the repository:
 
 ```bash
-python qg_model.py \
-    --mrefin 6 --tend 100000 --dt 1 --dtout 40 \
-    --scheme rk4 --ic fourier --seed 42 \
-    --out data/qg_spinup.npz
+bash run_all.sh
 ```
 
-This takes approximately 10 minutes on a modern laptop (~9400 time steps/s).
-The resulting file is **not** included in this repository but is archived on
-Zenodo (see [Data availability](#data-availability)).
+The script executes the following steps in order:
 
-### Step 2 — Reference RK4 run
+| Step | Description | Runtime (approx.) |
+|------|-------------|-------------------|
+| 1 | Spin-up from rest (mrefin=6, tend=100000, RK4, dt=1) | ~45 min |
+| 2 | RK4 reference run (dt=1, t=100000→110000) | ~25 min |
+| 3 | LF+RA main run (α=0.10, dt=0.5) | ~12 min |
+| 4 | LF+RAW main run (α=0.10, dt=0.5) | ~12 min |
+| 5 | Alpha sensitivity sweep (α=0.05, 0.20, 0.40) | ~36 min |
+| 6 | Jacobian eigenspectrum, mrefin=6 (97×97) | ~2 min |
+| 7a | Spin-up from rest, mrefin=5 (dt=0.1) | ~45 min |
+| 7b | Jacobian eigenspectrum, mrefin=5 (49×49) | ~1 min |
+| 8 | Lyapunov exponent (Benettin, 50000 steps) | ~90 min |
+| 9 | All figures | ~1 min |
+
+Total runtime on a modern laptop: approximately 4–5 hours.
+
+> **Note:** The mrefin=5 spin-up (Step 7a) requires `dt=0.1` — larger time steps
+> cause blow-up during spin-up at this resolution.
+
+### Running individual steps
+
+Each command in `run_all.sh` is self-contained and can be run independently.
+For example, to recompute only the eigenspectrum:
 
 ```bash
-bash experiments/run_reference.sh
+python analysis/jacobian_spectrum.py --restart qg_zero.npz --neigs 200 --no-matrix --out jacobian_spectrum.npz
 ```
 
-### Step 3 — Leapfrog stability sweep
+---
 
-```bash
-bash experiments/run_leapfrog_sweep.sh
-```
+## Key results
 
-### Step 4 — Long Leapfrog runs for statistical analysis
-
-```bash
-bash experiments/run_leapfrog_long.sh
-```
-
-### Step 5 — Generate all figures
-
-```bash
-python analysis/jacobian_spectrum.py    --restart data/qg_spinup.npz
-python analysis/stability_regions.py   --restart data/qg_spinup.npz
-python analysis/lyapunov.py            --restart data/qg_spinup.npz
-python analysis/uncertainty.py         --rk4 data/qg_rk4_ref.npz \
-                                        --lf-ra data/qg_lf_ra.npz \
-                                        --lf-raw data/qg_lf_raw.npz
-```
-
-All figures are saved to `figures/`.
+| Quantity | Value |
+|----------|-------|
+| Grid (main experiments) | 97×97 (mrefin=6), $h=0.01042$ |
+| Analytical $\Delta t_{\max}^{LF}$ (mrefin=6) | 0.090 |
+| Numerical $\Delta t_{\max}^{LF}$ (mrefin=6) | 1.236 (factor **13.7×** larger) |
+| Analytical $\Delta t_{\max}^{LF}$ (mrefin=5) | 0.362 |
+| Numerical $\Delta t_{\max}^{LF}$ (mrefin=5) | 0.235 (factor **1.54×** smaller) |
+| Maximum Lyapunov exponent $\sigma_1$ | 0.0318 |
+| Lyapunov time $\tau_L$ | 31.5 time units |
+| LF+RA kinetic energy bias (α=0.10) | −21% |
+| LF+RA enstrophy bias (α=0.10) | −45% |
+| LF+RAW kinetic energy bias | −2% |
+| LF+RAW enstrophy bias | +4% |
 
 ---
 
@@ -186,6 +195,10 @@ Key numerical methods:
 > Williams, P. D. (2009). A proposed modification to the Robert-Asselin
 > time filter. *Monthly Weather Review*, 137(8), 2538–2546.
 
+> Li, X. S., & Demmel, J. W. (2003). SuperLU_DIST: A scalable distributed-memory
+> sparse direct solver for unsymmetric linear systems.
+> *ACM Transactions on Mathematical Software*, 29(2), 110–140.
+
 ---
 
 ## License
@@ -196,4 +209,4 @@ MIT — see [LICENSE](LICENSE).
 
 ## Citation
 
-*(to be added upon publication)*
+*(to be added upon acceptance)*
