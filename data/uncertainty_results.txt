@@ -1,0 +1,30 @@
+Statistical comparison results (mrefin=6, dt_RK4=1.0, dt_LF=0.5)
+==================================================================
+All runs restart from qg_zero.npz last record (t=100000)
+RK4: tend=110000, dt=1.0
+LF+RA:  tend=110000, dt=0.5, alpha=0.1
+LF+RAW: tend=110000, dt=0.5, alpha=0.1
+
+Statistical summary (251 records each):
+  Quantity          RK4          LF+RA        LF+RAW
+  mean KE         38.3399      30.3162      37.5108
+  std  KE          1.9979       4.7065       1.3932
+  mean Enstrophy  1.505e+09    8.065e+08    1.572e+09
+  std  Enstrophy  4.895e+07    1.996e+08    8.381e+07
+
+KL divergence D_KL(RK4 || LF+RA):
+  KE  : 7.2095
+  Enst: 3.5096
+
+KL divergence D_KL(RK4 || LF+RAW):
+  KE  : 2.1899
+  Enst: 1.2478
+
+Key findings:
+  - LF+RA  reduces mean KE by ~21% vs RK4  (spurious dissipation)
+  - LF+RAW reduces mean KE by ~2%  vs RK4  (RAW filter corrects bias)
+  - LF+RA  reduces enstrophy by ~46% vs RK4
+  - LF+RAW enstrophy ~4% higher than RK4
+  - All three schemes reproduce k^{-3} spectral slope
+  - RAW filter recommended for long QG integrations
+  - Blowup with dt=1.0: LF+RA at t=101672, LF+RAW at t=102068

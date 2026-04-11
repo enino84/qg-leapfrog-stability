@@ -1,0 +1,2 @@
+LF+RA  dt=1.0  blowup at t=101672
+LF+RAW dt=1.0  blowup at t=102068

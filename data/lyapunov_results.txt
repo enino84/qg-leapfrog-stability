@@ -1,0 +1,25 @@
+Lyapunov exponent results (mrefin=6, qg_zero.npz, t0=100000)
+=============================================================
+sigma_1  = 0.0315
+tau_L    = 1/sigma_1 = 31.7 time units
+
+Trajectory validity time t* = tau_L * ln(1/eps_truncation):
+  LF+RA  dt=0.5  eps=O(dt^2)=0.25   t* = 31.7 * ln(4)   = 44 time units
+  RK4    dt=1.0  eps=O(dt^4)=1.0    t* = 31.7 * ln(1)   = 0  time units
+
+Interpretation:
+  Scheme comparison is trajectory-valid only for t << 44 time units
+  after restart. All longer-term comparisons must be statistical.
+Lyapunov exponent results (mrefin=6, qg_zero.npz, t0=100000)
+=============================================================
+sigma_1  = 0.031777
+tau_L    = 1/sigma_1 = 31.47 time units
+nsteps   = 50000   renorm=100   dt=1.0   eps=1e-6
+
+Trajectory validity time t* = tau_L * ln(1/eps_truncation):
+  LF+RA  dt=0.5  eps=O(dt^2)=0.25   t* = 31.47 * ln(4)   = 43.6 time units
+  RK4    dt=1.0  eps=O(dt^4)=1.0    t* = 31.47 * ln(1)   = 0    time units
+
+Interpretation:
+  Scheme comparison is trajectory-valid only for t << 44 time units
+  after restart. All longer-term comparisons must be statistical.
