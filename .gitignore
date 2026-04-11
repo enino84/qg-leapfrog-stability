@@ -1,0 +1,24 @@
+# simulation output — archived on Zenodo, not tracked here
+*.npz
+*.nc
+*.nc4
+
+# generated figures
+figures/*.png
+figures/*.pdf
+figures/*.svg
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# editors
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
