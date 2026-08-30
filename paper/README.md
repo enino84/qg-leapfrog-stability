@@ -9,7 +9,8 @@ Society / Wiley) as a Data Services Article:
 > Spectral Stability Diagnostics, and Filter Sensitivity Data.
 > *Geoscience Data Journal*. doi:10.1002/gdj3.XXXX
 
-The LaTeX sources of the article are not tracked here; the archived
-version of record is the one distributed by the publisher. The archived
-snapshot of this repository, including the simulation outputs, is on
-Zenodo at doi:10.5281/zenodo.XXXXXXX.
+The LaTeX sources of the article are not tracked here; the archived version of
+record is the one distributed by the publisher.
+
+- Archived snapshot + simulation outputs: <https://doi.org/10.5281/zenodo.22168803>
+- Development mirror: <https://github.com/enino84/qg-leapfrog-stability>

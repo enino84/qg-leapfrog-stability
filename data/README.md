@@ -4,7 +4,7 @@ Simulation output files (`.npz`) are **not** tracked in this repository
 because of their size (several hundred MB). They are archived on Zenodo,
 together with a snapshot of the code:
 
-> **DOI**: [10.5281/zenodo.XXXXXXX](https://doi.org/10.5281/zenodo.XXXXXXX)
+> **DOI**: [10.5281/zenodo.22168803](https://doi.org/10.5281/zenodo.22168803)
 
 The plain-text files alongside this README (`blowup_times.txt`,
 `lyapunov_results.txt`, `uncertainty_results.txt`) are the summary output of

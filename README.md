@@ -1,7 +1,10 @@
 # qg-leapfrog-stability
 
-**Leapfrog time integration in a 1.5-layer quasi-geostrophic model:
-stability analysis, uncertainty propagation, and filter-induced dissipation**
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22168803.svg)](https://doi.org/10.5281/zenodo.22168803)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+**QG-Python: a reproducible 1.5-layer quasi-geostrophic modelling service
+with spectral stability and filter sensitivity diagnostics**
 
 This repository contains the QG-Python model, the analysis scripts, and the
 shell drivers associated with the Data Services Article published in
@@ -14,7 +17,7 @@ shell drivers associated with the Data Services Article published in
 
 The archived snapshot of this repository **together with the simulation
 outputs** is the citable version of record:
-doi:[10.5281/zenodo.XXXXXXX](https://doi.org/10.5281/zenodo.XXXXXXX)
+doi:[10.5281/zenodo.22168803](https://doi.org/10.5281/zenodo.22168803)
 
 ---
 
@@ -165,7 +168,7 @@ python analysis/jacobian_spectrum.py --restart qg_zero.npz --neigs 200 --no-matr
 | Maximum Lyapunov exponent $\sigma_1$ | 0.0318 |
 | Lyapunov time $\tau_L$ | 31.5 time units |
 | LF+RA kinetic energy bias (α=0.10) | −21% |
-| LF+RA enstrophy bias (α=0.10) | −45% |
+| LF+RA enstrophy bias (α=0.10) | −46% |
 | LF+RAW kinetic energy bias | −2% |
 | LF+RAW enstrophy bias | +4% |
 
@@ -202,7 +205,13 @@ The simulation output files (`.npz`) are several hundred megabytes and are
 therefore not tracked by git. They are archived, together with a snapshot of
 this repository, on Zenodo:
 
-> **DOI**: [10.5281/zenodo.XXXXXXX](https://doi.org/10.5281/zenodo.XXXXXXX)
+> **DOI**: [10.5281/zenodo.22168803](https://doi.org/10.5281/zenodo.22168803)
+> **Record**: <https://doi.org/10.5281/zenodo.22168803>
+> **Development version**: <https://github.com/enino84/qg-leapfrog-stability>
+
+The Zenodo record is the authoritative citation target: it holds both the
+tagged source snapshot (`qg-python-v1.0.zip`) and the simulation outputs. This
+GitHub repository is the development mirror and tracks the source only.
 
 The archive contains the equilibrium restart fields at `t = 100000` for both
 resolutions, the eigenvalue clouds of the linearised operator, the Benettin
@@ -272,7 +281,7 @@ metadata is in [CITATION.cff](CITATION.cff).
   version   = {1.0},
   year      = {2026},
   publisher = {Zenodo},
-  doi       = {10.5281/zenodo.XXXXXXX}
+  doi       = {10.5281/zenodo.22168803}
 }
 ```
 

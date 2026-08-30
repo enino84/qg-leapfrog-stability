@@ -5,7 +5,7 @@ version: "1.0"
 date-released: 2026-08-30
 type: software
 license: MIT
-doi: 10.5281/zenodo.XXXXXXX
+doi: 10.5281/zenodo.22168803
 url: "https://github.com/enino84/qg-leapfrog-stability"
 repository-code: "https://github.com/enino84/qg-leapfrog-stability"
 abstract: >-
