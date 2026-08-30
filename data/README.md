@@ -1,9 +1,14 @@
 # Data
 
 Simulation output files (`.npz`) are **not** tracked in this repository
-because of their size (several hundred MB). They are archived on Zenodo:
+because of their size (several hundred MB). They are archived on Zenodo,
+together with a snapshot of the code:
 
-> **DOI**: *(to be assigned upon submission)*
+> **DOI**: [10.5281/zenodo.XXXXXXX](https://doi.org/10.5281/zenodo.XXXXXXX)
+
+The plain-text files alongside this README (`blowup_times.txt`,
+`lyapunov_results.txt`, `uncertainty_results.txt`) are the summary output of
+the analysis pipeline and are small enough to be tracked here.
 
 ## Reproducing the data from scratch
 

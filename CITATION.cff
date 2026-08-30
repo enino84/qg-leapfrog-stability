@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+message: "If you use this software or the accompanying dataset, please cite both the article and the archived release."
+title: "QG-Python: a reproducible 1.5-layer quasi-geostrophic modelling service with spectral stability and filter sensitivity diagnostics"
+version: "1.0"
+date-released: 2026-08-30
+type: software
+license: MIT
+doi: 10.5281/zenodo.XXXXXXX
+url: "https://github.com/enino84/qg-leapfrog-stability"
+repository-code: "https://github.com/enino84/qg-leapfrog-stability"
+abstract: >-
+  Open, reproducible Python implementation of the 1.5-layer
+  quasi-geostrophic model originally distributed as QG-C, in which the
+  Fortran multigrid Helmholtz solver is replaced by a direct sparse LU
+  factorization. Exposes RK4, dp5 and Leapfrog with the Robert-Asselin
+  and Robert-Asselin-Williams filters under a single API, together with
+  diagnostic modules for the linearised operator, its eigenspectrum and
+  the maximum Lyapunov exponent.
+keywords:
+  - quasi-geostrophic model
+  - Leapfrog scheme
+  - Robert-Asselin-Williams filter
+  - stability analysis
+  - Lyapunov exponent
+  - reproducible geoscience software
+authors:
+  - family-names: "Nino-Ruiz"
+    given-names: "Elias D."
+    orcid: "https://orcid.org/0000-0001-7784-8163"
+    affiliation: "Applied Mathematics and Computer Science Laboratory, Department of Computer Science, Universidad del Norte, Barranquilla, Colombia"
+    email: "enino@uninorte.edu.co"
+preferred-citation:
+  type: article
+  title: "QG-Python: A Reproducible 1.5-Layer Quasi-Geostrophic Modelling Service with Direct Sparse Solvers, Spectral Stability Diagnostics, and Filter Sensitivity Data"
+  journal: "Geoscience Data Journal"
+  year: 2026
+  doi: 10.1002/gdj3.XXXX
+  authors:
+    - family-names: "Nino-Ruiz"
+      given-names: "Elias D."
+      orcid: "https://orcid.org/0000-0001-7784-8163"

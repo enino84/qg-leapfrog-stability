@@ -3,8 +3,9 @@
 # run_all.sh
 # =============================================================================
 # Reproduce all simulations and figures for:
-#   "Leapfrog time integration in a 1.5-layer quasi-geostrophic model:
-#    stability analysis, uncertainty propagation, and filter-induced dissipation"
+#   Nino-Ruiz, E. D. (2026). "QG-Python: A Reproducible 1.5-Layer
+#    Quasi-Geostrophic Modelling Service with Direct Sparse Solvers, Spectral
+#    Stability Diagnostics, and Filter Sensitivity Data". Geoscience Data Journal.
 #
 # Run from the ROOT of the repo (where qg_model.py lives):
 #   bash run_all.sh
@@ -25,7 +26,7 @@ set -e   # stop on first error
 
 echo ""
 echo "============================================================"
-echo "  QG Leapfrog paper — full reproduction script"
+echo "  QG-Python — full reproduction script (Geoscience Data Journal)"
 echo "============================================================"
 echo ""
 

@@ -3,8 +3,18 @@
 **Leapfrog time integration in a 1.5-layer quasi-geostrophic model:
 stability analysis, uncertainty propagation, and filter-induced dissipation**
 
-This repository contains the code and analysis scripts associated with the paper
-submitted to *Ocean Modelling*.
+This repository contains the QG-Python model, the analysis scripts, and the
+shell drivers associated with the Data Services Article published in
+*Geoscience Data Journal* (Royal Meteorological Society / Wiley):
+
+> Nino-Ruiz, E. D. (2026). **QG-Python: A Reproducible 1.5-Layer
+> Quasi-Geostrophic Modelling Service with Direct Sparse Solvers, Spectral
+> Stability Diagnostics, and Filter Sensitivity Data**.
+> *Geoscience Data Journal*. doi:[10.1002/gdj3.XXXX](https://doi.org/10.1002/gdj3.XXXX)
+
+The archived snapshot of this repository **together with the simulation
+outputs** is the citable version of record:
+doi:[10.5281/zenodo.XXXXXXX](https://doi.org/10.5281/zenodo.XXXXXXX)
 
 ---
 
@@ -51,15 +61,24 @@ qg-leapfrog-stability/
 │   ├── plot_fields.py           # Spatial snapshots of streamfunction
 │   └── plot_alpha_sensitivity.py  # RA filter sensitivity figures
 │
+├── experiments/
+│   ├── run_reference.sh         # Spin-up + RK4 reference run
+│   ├── run_leapfrog_long.sh     # LF+RA and LF+RAW main runs
+│   ├── run_leapfrog_sweep.sh    # RA filter alpha sweep
+│   └── run_analysis.sh          # Eigenspectrum + Lyapunov diagnostics
+│
 ├── data/
-│   └── README.md                # Instructions to reproduce the .npz files
+│   ├── README.md                # Exact command line behind every run
+│   ├── blowup_times.txt         # dt=1.0 instability onset, LF+RA / LF+RAW
+│   ├── lyapunov_results.txt     # Benettin MLE summary
+│   └── uncertainty_results.txt  # KE / enstrophy / KL divergence summary
 │
 ├── paper/
-│   ├── manuscript.tex
-│   └── references.bib
+│   └── README.md                # Pointer to the published article
 │
 ├── figures/                     # Generated locally — not tracked by git
 ├── requirements.txt
+├── CITATION.cff
 ├── LICENSE
 └── README.md
 ```
@@ -115,8 +134,18 @@ Total runtime on a modern laptop: approximately 4–5 hours.
 
 ### Running individual steps
 
-Each command in `run_all.sh` is self-contained and can be run independently.
-For example, to recompute only the eigenspectrum:
+The pipeline is also split into four self-contained drivers under
+`experiments/`, which can be run in isolation for partial reproduction:
+
+```bash
+bash experiments/run_reference.sh       # spin-up + RK4 reference
+bash experiments/run_leapfrog_long.sh   # LF+RA and LF+RAW main runs
+bash experiments/run_leapfrog_sweep.sh  # alpha sensitivity sweep
+bash experiments/run_analysis.sh        # eigenspectrum + Lyapunov
+```
+
+Each command in `run_all.sh` is likewise self-contained. For example, to
+recompute only the eigenspectrum:
 
 ```bash
 python analysis/jacobian_spectrum.py --restart qg_zero.npz --neigs 200 --no-matrix --out jacobian_spectrum.npz
@@ -169,9 +198,19 @@ python qg_model.py --scheme leapfrog --ra-alpha 0.1 --raw ...
 
 ## Data availability
 
-The simulation output files (.npz) are archived on Zenodo:
+The simulation output files (`.npz`) are several hundred megabytes and are
+therefore not tracked by git. They are archived, together with a snapshot of
+this repository, on Zenodo:
 
-> **DOI**: *(to be assigned upon submission)*
+> **DOI**: [10.5281/zenodo.XXXXXXX](https://doi.org/10.5281/zenodo.XXXXXXX)
+
+The archive contains the equilibrium restart fields at `t = 100000` for both
+resolutions, the eigenvalue clouds of the linearised operator, the Benettin
+trace of the maximum Lyapunov exponent, and the time-resolved kinetic energy,
+enstrophy and isotropic spectra for RK4, LF+RA and LF+RAW across
+alpha in {0.05, 0.10, 0.20, 0.40}. `data/README.md` documents the exact
+command line behind each file, so every output can also be regenerated from
+scratch.
 
 ---
 
@@ -203,10 +242,59 @@ Key numerical methods:
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+The source code in this repository is released under the MIT License — see
+[LICENSE](LICENSE). The simulation output files distributed through the Zenodo
+archive are released under
+[CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/).
 
 ---
 
 ## Citation
 
-*(to be added upon acceptance)*
+Please cite both the article and the archived software release. Machine-readable
+metadata is in [CITATION.cff](CITATION.cff).
+
+```bibtex
+@article{NinoRuiz2026qgpython,
+  author  = {Nino-Ruiz, Elias D.},
+  title   = {{QG-Python}: A Reproducible 1.5-Layer Quasi-Geostrophic Modelling
+             Service with Direct Sparse Solvers, Spectral Stability Diagnostics,
+             and Filter Sensitivity Data},
+  journal = {Geoscience Data Journal},
+  year    = {2026},
+  doi     = {10.1002/gdj3.XXXX}
+}
+
+@software{NinoRuiz2026qgpythonsoftware,
+  author    = {Nino-Ruiz, Elias D.},
+  title     = {{QG-Python}: a reproducible 1.5-layer quasi-geostrophic modelling
+               service with spectral stability and filter sensitivity diagnostics},
+  version   = {1.0},
+  year      = {2026},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.XXXXXXX}
+}
+```
+
+---
+
+## A note on the enstrophy diagnostic
+
+Enstrophy is reported throughout as the domain average of
+`(nabla^2 psi)^2`, evaluated with the standard 5-point Laplacian on the
+**interior nodes only**. This is the definition in
+`analysis/uncertainty.py::enstrophy`, and it is the one every other script
+imports.
+
+The wall ring must be excluded from the average. `qg_model.py` imposes
+homogeneous Dirichlet conditions `psi = 0` on all four walls, so at a wall node
+the 5-point stencil collapses to `psi_adjacent / h^2`; with `h ~ 0.01` that is
+`O(1e5)`, and squaring it lets a one-node ring — about 4% of the points —
+dominate the domain average and inflate its variance by considerably more,
+while leaving the *relative* biases between time-stepping schemes almost
+unchanged.
+
+`analysis/make_tables.py` regenerates the LaTeX rows of both tables in the
+article directly from the `.npz` runs, so the statistical summary and the alpha
+sweep cannot drift apart. Pass `--compare` to also print the wall-inclusive
+average.

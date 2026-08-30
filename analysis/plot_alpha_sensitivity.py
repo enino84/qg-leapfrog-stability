@@ -6,9 +6,15 @@ Generate two independent figures:
 Run from the repo root where the .npz files live.
 """
 
+import os
+import sys
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from uncertainty import kinetic_energy, enstrophy
 
 # ── data ──────────────────────────────────────────────────────────────────────
 
@@ -22,13 +28,18 @@ rk4_file = 'qg_rk4_ref.npz'
 
 
 def compute_stats(psi, lx):
-    nx = psi.shape[2]
-    h  = lx / (nx - 1)
-    ke   = np.mean(psi**2, axis=(1, 2))
-    lap  = (np.roll(psi, -1, 1) + np.roll(psi, 1, 1) +
-            np.roll(psi, -1, 2) + np.roll(psi, 1, 2) - 4*psi) / h**2
-    enst = np.mean(lap**2, axis=(1, 2))
-    return ke, enst
+    """Per-record kinetic energy and enstrophy.
+
+    Both diagnostics are delegated to ``uncertainty.py`` so that a single
+    definition is used throughout the analysis. The enstrophy averages
+    (nabla^2 psi)^2 over the INTERIOR nodes only. The wall ring must be
+    excluded: qg_model.py imposes psi = 0 on all four walls, so at a wall
+    node the 5-point stencil collapses to psi_adjacent / h^2, which with
+    h ~ 0.01 is O(1e5). Squaring it makes that one-node ring dominate the
+    domain average even though it is only ~4% of the points.
+    """
+    h = lx / (psi.shape[2] - 1)
+    return kinetic_energy(psi), enstrophy(psi, h)
 
 
 # RK4 reference
