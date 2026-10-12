@@ -23,3 +23,7 @@ __pycache__/
 .DS_Store
 Thumbs.db
 venv
+dist/
+build/
+*.egg-info/
+results/

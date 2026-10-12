@@ -26,12 +26,12 @@ set -e   # stop on first error
 
 echo ""
 echo "============================================================"
-echo "  QG-Python — full reproduction script (Geoscience Data Journal)"
+echo "  QG-Python, full reproduction script (Geoscience Data Journal)"
 echo "============================================================"
 echo ""
 
 # ---------------------------------------------------------------------------
-# STEP 1 — Spin-up from rest (generates equilibrium initial condition)
+# STEP 1, Spin-up from rest (generates equilibrium initial condition)
 # ---------------------------------------------------------------------------
 echo "=== Step 1: Spin-up (mrefin=6, tend=100000, RK4, dt=1) ==="
 python qg_model.py \
@@ -40,7 +40,7 @@ python qg_model.py \
     --out qg_zero.npz
 
 # ---------------------------------------------------------------------------
-# STEP 2 — RK4 reference run (Section 6 reference)
+# STEP 2, RK4 reference run (Section 6 reference)
 # ---------------------------------------------------------------------------
 echo ""
 echo "=== Step 2: RK4 reference run (dt=1, t=100000->110000) ==="
@@ -50,7 +50,7 @@ python qg_model.py \
     --out qg_rk4_ref.npz
 
 # ---------------------------------------------------------------------------
-# STEP 3 — LF+RA main run (alpha=0.10, dt=0.5)
+# STEP 3, LF+RA main run (alpha=0.10, dt=0.5)
 # ---------------------------------------------------------------------------
 echo ""
 echo "=== Step 3: LF+RA (alpha=0.10, dt=0.5) ==="
@@ -61,7 +61,7 @@ python qg_model.py \
     --out qg_lf_ra.npz
 
 # ---------------------------------------------------------------------------
-# STEP 4 — LF+RAW main run (alpha=0.10, dt=0.5)
+# STEP 4, LF+RAW main run (alpha=0.10, dt=0.5)
 # ---------------------------------------------------------------------------
 echo ""
 echo "=== Step 4: LF+RAW (alpha=0.10, dt=0.5) ==="
@@ -72,7 +72,7 @@ python qg_model.py \
     --out qg_lf_raw.npz
 
 # ---------------------------------------------------------------------------
-# STEP 5 — Alpha sensitivity (LF+RA, 4 values)
+# STEP 5, Alpha sensitivity (LF+RA, 4 values)
 # ---------------------------------------------------------------------------
 echo ""
 echo "=== Step 5: Alpha sensitivity sweep ==="
@@ -101,7 +101,7 @@ python qg_model.py \
 # Note: alpha=0.10 is already in qg_lf_ra.npz (Step 3)
 
 # ---------------------------------------------------------------------------
-# STEP 6 — Jacobian eigenspectrum (mrefin=6)
+# STEP 6, Jacobian eigenspectrum (mrefin=6)
 # ---------------------------------------------------------------------------
 echo ""
 echo "=== Step 6: Jacobian eigenspectrum (mrefin=6, 97x97) ==="
@@ -112,7 +112,7 @@ python analysis/jacobian_spectrum.py \
     --out jacobian_spectrum.npz
 
 # ---------------------------------------------------------------------------
-# STEP 7 — Spin-up and Jacobian eigenspectrum (mrefin=5)
+# STEP 7, Spin-up and Jacobian eigenspectrum (mrefin=5)
 # ---------------------------------------------------------------------------
 echo ""
 echo "=== Step 7a: Spin-up (mrefin=5, tend=100000, dt=0.1) ==="
@@ -130,7 +130,7 @@ python analysis/jacobian_spectrum.py \
     --out jacobian_spectrum_mrefin5.npz
 
 # ---------------------------------------------------------------------------
-# STEP 8 — Lyapunov exponent (Benettin algorithm)
+# STEP 8, Lyapunov exponent (Benettin algorithm)
 # ---------------------------------------------------------------------------
 echo ""
 echo "=== Step 8: Lyapunov exponent (nsteps=50000, renorm=100) ==="
@@ -144,7 +144,7 @@ python analysis/lyapunov.py \
     --plot
 
 # ---------------------------------------------------------------------------
-# STEP 9 — Generate all figures
+# STEP 9, Generate all figures
 # ---------------------------------------------------------------------------
 echo ""
 echo "=== Step 9: Generate figures ==="

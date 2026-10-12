@@ -195,7 +195,7 @@ def fig_convergence(sigma1, tau_L, sigma_running, t_renorm, out):
                label=f'Converged: $\\sigma_1 = {sigma1:.5f}$,  '
                      f'$\\tau_L = {tau_L:.1f}$')
     style_ax(ax, '$t$', '$\\sigma_1$',
-             'Running MLE estimate — convergence of Benettin algorithm')
+             'Running MLE estimate, convergence of Benettin algorithm')
     ax.legend(fontsize=10)
     plt.tight_layout()
     fig.savefig(out); plt.close(fig)
@@ -242,7 +242,7 @@ def run(args):
                      f"{out}/fig_lyapunov_growth_rates.png")
     fig_convergence(sigma1, tau_L, sigma_running, t_renorm,
                     f"{out}/fig_lyapunov_convergence.png")
-    print(f"\n  Done — 2 figures saved to '{out}/'")
+    print(f"\n  Done, 2 figures saved to '{out}/'")
 
 
 if __name__ == '__main__':

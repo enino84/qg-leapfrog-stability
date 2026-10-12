@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# run_reference.sh — spin-up from rest and RK4 reference integration
+# run_reference.sh, spin-up from rest and RK4 reference integration
 # =============================================================================
 # Produces:
 #   qg_zero.npz     equilibrium state at t = 100000 (restart for every other run)

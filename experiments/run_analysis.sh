@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# run_analysis.sh — linearisation, eigenspectrum and Lyapunov diagnostics
+# run_analysis.sh, linearisation, eigenspectrum and Lyapunov diagnostics
 # =============================================================================
 # Requires an equilibrium restart file (default qg_zero.npz, produced by
 # experiments/run_reference.sh). Override with:

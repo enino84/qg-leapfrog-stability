@@ -36,7 +36,7 @@ python qg_model.py \
     --out qg_rk4_ref.npz
 ```
 
-### 3. Leapfrog runs — RA filter, varying alpha
+### 3. Leapfrog runs, RA filter, varying alpha
 
 ```bash
 for ALPHA in 0.05 0.10 0.15 0.20; do
@@ -48,7 +48,7 @@ for ALPHA in 0.05 0.10 0.15 0.20; do
 done
 ```
 
-### 4. Leapfrog runs — RAW filter
+### 4. Leapfrog runs, RAW filter
 
 ```bash
 python qg_model.py \
@@ -58,7 +58,7 @@ python qg_model.py \
     --out qg_lf_raw.npz
 ```
 
-### 5. Stability sweep — varying dt
+### 5. Stability sweep, varying dt
 
 ```bash
 for DT in 0.5 1.0 2.0 3.0 4.0; do
@@ -70,7 +70,7 @@ for DT in 0.5 1.0 2.0 3.0 4.0; do
 done
 ```
 
-### 6. Resolution sweep — varying mrefin
+### 6. Resolution sweep, varying mrefin
 
 ```bash
 for MREFIN in 5 6 7; do
@@ -88,7 +88,7 @@ Note: `mrefin=7` (193×193 grid) requires ~1 hour and ~4 GB RAM.
 
 | File | Description |
 |------|-------------|
-| `qg_spinup.npz` | Spin-up run — equilibrium IC source |
+| `qg_spinup.npz` | Spin-up run, equilibrium IC source |
 | `qg_rk4_ref.npz` | RK4 reference (Section 3) |
 | `qg_lf_ra_a0.10.npz` | Leapfrog + RA, alpha=0.10 |
 | `qg_lf_raw.npz` | Leapfrog + RAW, alpha=0.10 |

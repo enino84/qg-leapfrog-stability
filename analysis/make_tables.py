@@ -1,5 +1,5 @@
 """
-make_tables.py — regenerate the LaTeX rows of Tables 5 and 6 from the .npz runs.
+make_tables.py, regenerate the LaTeX rows of Tables 5 and 6 from the .npz runs.
 
 Single source of truth: the diagnostics are imported from uncertainty.py, so the
 statistical summary and the alpha sweep can no longer drift apart.

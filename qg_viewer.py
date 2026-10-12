@@ -1,5 +1,5 @@
 """
-qg_viewer.py — Interactive viewer for QG-Python output (.npz)
+qg_viewer.py, Interactive viewer for QG-Python output (.npz)
 
 Usage:
   python qg_viewer.py qg.npz

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # =============================================================================
-# run_leapfrog_sweep.sh — LF+RA sensitivity to the filter parameter alpha
+# run_leapfrog_sweep.sh, LF+RA sensitivity to the filter parameter alpha
 # =============================================================================
 # Produces qg_lf_ra_a005.npz, qg_lf_ra_a020.npz, qg_lf_ra_a040.npz.
 # The alpha = 0.10 member is qg_lf_ra.npz, produced by
-# experiments/run_leapfrog_long.sh — it is not recomputed here.
+# experiments/run_leapfrog_long.sh, it is not recomputed here.
 #
 # Requires qg_zero.npz (see experiments/run_reference.sh).
 #

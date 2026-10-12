@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "qg-python"
-version = "1.0.0"
-description = "Reproducible 1.5-layer quasi-geostrophic model (port of QG-C) with a direct sparse Helmholtz solver, RK4 / dp5 / Leapfrog (RA, RAW) integrators and stability diagnostics"
+version = "1.1.0"
+description = "Reproducible 1.5-layer quasi-geostrophic model (port of QG-C) with a direct sparse Helmholtz solver, RK4 / dp5 / Leapfrog (RA, RAW) integrators, stability diagnostics, and a stationary preset with a state-vector API for data assimilation"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
@@ -24,6 +24,7 @@ dependencies = ["numpy>=1.24", "scipy>=1.10"]
 plots  = ["matplotlib>=3.7"]
 netcdf = ["netCDF4"]
 all    = ["matplotlib>=3.7", "netCDF4"]
+test   = ["pytest"]
 
 [project.urls]
 Homepage   = "https://aml-cs.github.io/software/qg-python/"
@@ -32,7 +33,8 @@ Paper      = "https://doi.org/10.1002/gdj3.70107"
 Dataset    = "https://doi.org/10.5281/zenodo.22168803"
 
 [project.scripts]
-qg-python = "qg_model:main"
+qg-python = "qgpython.model:main"
 
 [tool.setuptools]
 py-modules = ["qg_model"]
+packages = ["qgpython"]

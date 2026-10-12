@@ -78,7 +78,7 @@ def build_jacobian(model, q0, eps=1e-5, verbose=True):
     J_dense = np.zeros((d, d), dtype=float)
 
     if verbose:
-        print(f"  Building J_F ({d}x{d}) — {2*d} Helmholtz solves...", flush=True)
+        print(f"  Building J_F ({d}x{d}), {2*d} Helmholtz solves...", flush=True)
         t0 = time.time()
 
     for k in range(d):
@@ -174,7 +174,7 @@ def run(args):
         model.q = q0_raw
     else:
         model._q_from_psi()
-        print("  q not in file — reconstructed from psi.")
+        print("  q not in file, reconstructed from psi.")
     q0 = model.q.copy()
 
     # ── analytical bounds ─────────────────────────────────────────────────

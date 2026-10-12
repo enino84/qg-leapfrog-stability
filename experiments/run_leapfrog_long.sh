@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# run_leapfrog_long.sh — main Leapfrog integrations (alpha = 0.10, dt = 0.5)
+# run_leapfrog_long.sh, main Leapfrog integrations (alpha = 0.10, dt = 0.5)
 # =============================================================================
 # Produces:
 #   qg_lf_ra.npz   Leapfrog + Robert-Asselin filter

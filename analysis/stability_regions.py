@@ -95,7 +95,7 @@ def fig_eigenvalue_cloud(eigs, lam_real_max, lam_imag_max, h, m, n, t_eq,
     style_ax(ax,
              xlabel='Re($\\lambda$)',
              ylabel='Im($\\lambda$)',
-             title=f'Eigenvalue cloud of $J_{{\\mathcal{{F}}}}(q_0)$  —  '
+             title=f'Eigenvalue cloud of $J_{{\\mathcal{{F}}}}(q_0)$ ,  '
                    f'QG {m}$\\times${n}  ($h={h:.4f}$,  $t_{{\\mathrm{{eq}}}}={t_eq:.0f}$)')
     ax.legend(fontsize=9, loc='lower right')
     plt.tight_layout()
@@ -187,7 +187,7 @@ def run(args):
     fig_stability_regions(eigs, lam_imag_max,
                           h, m, n, t_eq, args.dt,
                           f"{out}/fig_stability_regions.png")
-    print(f"\n  Done — 2 figures saved to '{out}/'")
+    print(f"\n  Done, 2 figures saved to '{out}/'")
 
 
 if __name__ == '__main__':

@@ -124,7 +124,7 @@ def fig_ke_kde(t_rk4, KE_rk4, t_ra, KE_ra, t_raw, KE_raw, out):
                 ls=SCHEME_LS[key], label=SCHEME_LABELS[key])
         ax.fill_between(x, y, alpha=0.12, color=col)
     style_ax(ax, '$\\langle\\psi^2\\rangle$', 'Density',
-             'Kinetic energy — stationary distribution (KDE)')
+             'Kinetic energy, stationary distribution (KDE)')
     ax.legend(fontsize=9)
     plt.tight_layout()
     save(fig, out)
@@ -154,7 +154,7 @@ def fig_enstrophy_kde(t_rk4, EN_rk4, t_ra, EN_ra, t_raw, EN_raw, out):
                 ls=SCHEME_LS[key], label=SCHEME_LABELS[key])
         ax.fill_between(x, y, alpha=0.12, color=col)
     style_ax(ax, '$\\langle(\\nabla^2\\psi)^2\\rangle$', 'Density',
-             'Enstrophy — stationary distribution (KDE)')
+             'Enstrophy, stationary distribution (KDE)')
     ax.legend(fontsize=9)
     plt.tight_layout()
     save(fig, out)
@@ -268,7 +268,7 @@ def run(args):
     fig_trajectory_divergence(t_rk4, psi_rk4, t_ra, psi_ra,
                                t_raw, psi_raw, tau_L,
                                f"{p}/fig_trajectory_divergence.png")
-    print(f"\n  Done — 6 figures saved to '{out}/'")
+    print(f"\n  Done, 6 figures saved to '{out}/'")
 
 
 if __name__ == '__main__':

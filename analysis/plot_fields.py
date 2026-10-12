@@ -1,7 +1,7 @@
 """
 plot_fields.py
 ==============
-Streamfunction snapshots — one independent figure per (scheme, time).
+Streamfunction snapshots, one independent figure per (scheme, time).
 
 Output files in --out-dir:
   fig_fields_RK4_t{T}_sec2_initial_state.png
@@ -12,7 +12,7 @@ Output files in --out-dir:
 
 In the paper, group them with \\subcaption per time instant:
   \\begin{figure}
-    \\subcaption{$t=t_0$ — initial state (all schemes identical)}
+    \\subcaption{$t=t_0$, initial state (all schemes identical)}
     \\includegraphics{fig_fields_RK4_t100000_sec2_initial_state}
     \\includegraphics{fig_fields_LFRA_t100000_sec2_initial_state}
     ...
@@ -41,11 +41,11 @@ apply_style()
 # (fraction_along_run, filename_tag, section_tag, title_hint)
 TIMES = [
     (0.0, 'sec2_initial_state',
-     'Initial state — all schemes identical'),
+     'Initial state, all schemes identical'),
     (0.5, 'sec4_mid_divergence',
-     'Mid-integration — trajectories diverged'),
+     'Mid-integration, trajectories diverged'),
     (1.0, 'sec6_final_state',
-     'Final state — statistically decorrelated'),
+     'Final state, statistically decorrelated'),
 ]
 
 SCHEMES = [
@@ -132,14 +132,14 @@ def run(args):
             t_actual = t_arr[rec]
             fname   = (f"fig_fields_{scheme_tag}"
                        f"_t{t_actual:.0f}_{time_tag}.png")
-            title   = (f'{scheme_label}  —  $t = {t_actual:.0f}$\n'
+            title   = (f'{scheme_label} ,  $t = {t_actual:.0f}$\n'
                        f'{time_hint}')
             make_field_figure(psi_arr[rec], t_actual,
                               scheme_label, col, clim, lx,
                               title, os.path.join(out, fname))
 
     n_figs = len(TIMES) * len(runs)
-    print(f"\n  Done — {n_figs} figures saved to '{out}/'")
+    print(f"\n  Done, {n_figs} figures saved to '{out}/'")
 
 
 if __name__ == '__main__':

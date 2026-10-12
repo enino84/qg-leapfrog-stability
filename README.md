@@ -41,6 +41,61 @@ To reproduce the experiments of the paper, clone this repository and run `bash r
 
 ---
 
+### Releasing to PyPI
+
+```
+pip install build twine
+python -m build                       # dist/qg_python-1.1.0.tar.gz and .whl
+twine check dist/*
+twine upload dist/*                   # user __token__, password: the PyPI token
+git tag v1.1.0 && git push --tags     # Zenodo archives the release
+```
+
+## Regimes and presets (v1.1)
+
+```
+pip install qg-python            # https://pypi.org/project/qg-python/ ; import as `qgpython`, `import qg_model` still works
+```
+
+The defaults of `QGParams` are those of QG-C and of the article above, so that
+every script in this repository reproduces the published results. For **data
+assimilation** (cycling a filter over hundreds of analyses) use the stationary
+preset instead:
+
+```python
+from qgpython import stationary_model, api
+model = stationary_model(mrefin=5)                      # 49x49, rkh2 = 1e-11, RK4, dt = 0.3125
+x = api.propagate(model, api.pack(model.q, model.psi), [0.0, 20000.0])   # spin-up
+q, psi = api.unpack(model, x)
+```
+
+Why a preset: with the QG-C default dissipation (`rkh2 = 1e-12`) the flow keeps
+intensifying, the standard deviation of `q` is still rising at `t = 8000` and
+beyond, so there is no stationary regime to sample a climatology from. With ten
+times the dissipation (`rkh2 = 1e-11`) it settles: 1.107e4 at `t = 20000`
+against 1.222e4 at `t = 60000`. Sakov & Oke (2008) make the same adjustment.
+What we measured on this implementation (September 2026, `mrefin = 5`):
+
+| | `rkh2 = 1e-12` (default) | `rkh2 = 1e-11` (preset) |
+|---|---|---|
+| std of `q` at t = 8000 / 20000 / 60000 | rising / rising / rising | 1.10e4 / 1.11e4 / 1.22e4 |
+| climatology (snapshots every 250 units after t = 20000) | not stationary | 200 decorrelated states |
+| forecast blow-ups in 500+ cycled runs (60-120 analyses) | n/a | none |
+| error growth per 20 units, climatological ensemble | n/a | 1.9x |
+| point perturbation of `q` after 20 / 200 units | n/a | stays in place; centroid moves 0.1 / 1.4 cells |
+
+The last line matters for localization: in this model the forecast error grows
+locally by instability and is not advected within an assimilation interval
+(the same holds at `rkh2 = 1e-12` and at `mrefin = 6`). The figure
+`figures/qg_resolutions.png` shows the same stationary state at 49x49, 97x97
+and 193x193.
+
+`api` gives the state-vector interface a filter needs: `pack/unpack`,
+`propagate(model, x, [t0, t1])` (stateless between calls, leapfrog memory reset),
+`psi_from_q`, and `interior_mask` (the points off the Dirichlet boundary, the
+ones to estimate). Neighbourhoods for localization must **not** wrap: the basin
+is closed.
+
 ## Overview
 
 We implement the Leapfrog scheme with Robert-Asselin (RA) and
@@ -71,7 +126,7 @@ extended with the Leapfrog family of integrators.
 ```
 qg-leapfrog-stability/
 │
-├── qg_model.py                  # QG model — all time-stepping schemes
+├── qg_model.py                  # QG model, all time-stepping schemes
 ├── qg_viewer.py                 # Interactive field viewer (.npz files)
 ├── run_all.sh                   # Single script to reproduce all results
 │
@@ -99,7 +154,7 @@ qg-leapfrog-stability/
 ├── paper/
 │   └── README.md                # Pointer to the published article
 │
-├── figures/                     # Generated locally — not tracked by git
+├── figures/                     # Generated locally, not tracked by git
 ├── requirements.txt
 ├── CITATION.cff
 ├── LICENSE
@@ -150,9 +205,9 @@ The script executes the following steps in order:
 | 8 | Lyapunov exponent (Benettin, 50000 steps) | ~90 min |
 | 9 | All figures | ~1 min |
 
-Total runtime on a modern laptop: approximately 4–5 hours.
+Total runtime on a modern laptop: approximately 4-5 hours.
 
-> **Note:** The mrefin=5 spin-up (Step 7a) requires `dt=0.1` — larger time steps
+> **Note:** The mrefin=5 spin-up (Step 7a) requires `dt=0.1`, larger time steps
 > cause blow-up during spin-up at this resolution.
 
 ### Running individual steps
@@ -255,23 +310,23 @@ Key numerical methods:
 
 > Arakawa, A. (1966). Computational design for long-term numerical integration
 > of the equations of fluid motion.
-> *Journal of Computational Physics*, 1(1), 119–143.
+> *Journal of Computational Physics*, 1(1), 119-143.
 
 > Asselin, R. (1972). Frequency filter for time integrations.
-> *Monthly Weather Review*, 100(6), 487–490.
+> *Monthly Weather Review*, 100(6), 487-490.
 
 > Williams, P. D. (2009). A proposed modification to the Robert-Asselin
-> time filter. *Monthly Weather Review*, 137(8), 2538–2546.
+> time filter. *Monthly Weather Review*, 137(8), 2538-2546.
 
 > Li, X. S., & Demmel, J. W. (2003). SuperLU_DIST: A scalable distributed-memory
 > sparse direct solver for unsymmetric linear systems.
-> *ACM Transactions on Mathematical Software*, 29(2), 110–140.
+> *ACM Transactions on Mathematical Software*, 29(2), 110-140.
 
 ---
 
 ## License
 
-The source code in this repository is released under the MIT License — see
+The source code in this repository is released under the MIT License, see
 [LICENSE](LICENSE). The simulation output files distributed through the Zenodo
 archive are released under
 [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/).
@@ -318,7 +373,7 @@ imports.
 The wall ring must be excluded from the average. `qg_model.py` imposes
 homogeneous Dirichlet conditions `psi = 0` on all four walls, so at a wall node
 the 5-point stencil collapses to `psi_adjacent / h^2`; with `h ~ 0.01` that is
-`O(1e5)`, and squaring it lets a one-node ring — about 4% of the points —
+`O(1e5)`, and squaring it lets a one-node ring, about 4% of the points -
 dominate the domain average and inflate its variance by considerably more,
 while leaving the *relative* biases between time-stepping schemes almost
 unchanged.
@@ -327,3 +382,6 @@ unchanged.
 article directly from the `.npz` runs, so the statistical summary and the alpha
 sweep cannot drift apart. Pass `--compare` to also print the wall-inclusive
 average.
+
+---
+
