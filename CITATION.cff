@@ -34,7 +34,7 @@ preferred-citation:
   title: "QG-Python: A Reproducible 1.5-Layer Quasi-Geostrophic Modelling Service with Direct Sparse Solvers, Spectral Stability Diagnostics, and Filter Sensitivity Data"
   journal: "Geoscience Data Journal"
   year: 2026
-  doi: 10.1002/gdj3.XXXX
+  doi: 10.1002/gdj3.70107
   authors:
     - family-names: "Nino-Ruiz"
       given-names: "Elias D."

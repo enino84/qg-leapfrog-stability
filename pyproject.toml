@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qg-python"
+version = "1.0.0"
+description = "Reproducible 1.5-layer quasi-geostrophic model (port of QG-C) with a direct sparse Helmholtz solver, RK4 / dp5 / Leapfrog (RA, RAW) integrators and stability diagnostics"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Elias D. Nino-Ruiz", email = "enino@uninorte.edu.co"}]
+requires-python = ">=3.9"
+keywords = ["quasi-geostrophic", "data assimilation", "leapfrog", "robert-asselin-williams", "geophysical fluid dynamics"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Atmospheric Science",
+  "Operating System :: OS Independent",
+]
+dependencies = ["numpy>=1.24", "scipy>=1.10"]
+
+[project.optional-dependencies]
+plots  = ["matplotlib>=3.7"]
+netcdf = ["netCDF4"]
+all    = ["matplotlib>=3.7", "netCDF4"]
+
+[project.urls]
+Homepage   = "https://aml-cs.github.io/software/qg-python/"
+Repository = "https://github.com/enino84/qg-leapfrog-stability"
+Paper      = "https://doi.org/10.1002/gdj3.70107"
+Dataset    = "https://doi.org/10.5281/zenodo.22168803"
+
+[project.scripts]
+qg-python = "qg_model:main"
+
+[tool.setuptools]
+py-modules = ["qg_model"]

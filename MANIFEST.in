@@ -1,0 +1,6 @@
+include LICENSE README.md CITATION.cff requirements.txt
+prune paper
+prune figures
+prune data
+prune experiments
+prune analysis

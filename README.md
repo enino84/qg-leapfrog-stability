@@ -13,11 +13,31 @@ shell drivers associated with the Data Services Article published in
 > Nino-Ruiz, E. D. (2026). **QG-Python: A Reproducible 1.5-Layer
 > Quasi-Geostrophic Modelling Service with Direct Sparse Solvers, Spectral
 > Stability Diagnostics, and Filter Sensitivity Data**.
-> *Geoscience Data Journal*. doi:[10.1002/gdj3.XXXX](https://doi.org/10.1002/gdj3.XXXX)
+> *Geoscience Data Journal*. doi:[10.1002/gdj3.70107](https://doi.org/10.1002/gdj3.70107)
 
 The archived snapshot of this repository **together with the simulation
 outputs** is the citable version of record:
 doi:[10.5281/zenodo.22168803](https://doi.org/10.5281/zenodo.22168803)
+
+---
+
+## Install
+
+```bash
+pip install qg-python          # model only (numpy, scipy)
+pip install "qg-python[all]"   # + matplotlib and netCDF4 for the viewer and .nc output
+```
+
+```python
+from qg_model import QGModel, QGParams
+
+prm = QGParams(mrefin=6, tend=1000, dtout=20, scheme='leapfrog',
+               ra_alpha=0.1, raw_filter=True, outfname='qg_run.npz')
+psi, q = QGModel(prm).run('fourier', seed=42)
+```
+
+The same model is available on the command line as `qg-python` (run `qg-python --help`).
+To reproduce the experiments of the paper, clone this repository and run `bash run_all.sh`.
 
 ---
 
@@ -271,7 +291,7 @@ metadata is in [CITATION.cff](CITATION.cff).
              and Filter Sensitivity Data},
   journal = {Geoscience Data Journal},
   year    = {2026},
-  doi     = {10.1002/gdj3.XXXX}
+  doi     = {10.1002/gdj3.70107}
 }
 
 @software{NinoRuiz2026qgpythonsoftware,

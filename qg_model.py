@@ -45,6 +45,8 @@ DEPENDENCIES:
   netCDF4        (optional - for .nc output)
 """
 
+__version__ = "1.0.0"
+
 import numpy as np
 from scipy.sparse import diags
 from scipy.sparse.linalg import factorized
@@ -246,7 +248,7 @@ class HelmholtzSolver:
     def __init__(self, m: int, n: int, h: float, F: float):
         self.m = m
         self.n = n
-        A = _build_helmholtz_matrix(m, n, h, F)
+        A = _build_helmholtz_matrix(m, n, h, F).tocsc()   # CSC: what SuperLU wants
         self._lu = factorized(A)
 
     def solve(self, q: np.ndarray) -> np.ndarray:
@@ -639,7 +641,8 @@ class QGModel:
 # Command-line interface
 # ============================================================================
 
-if __name__ == '__main__':
+def main(argv=None):
+    """Command-line entry point (``qg-python`` once installed from PyPI)."""
     import argparse
 
     parser = argparse.ArgumentParser(
@@ -697,7 +700,7 @@ Stability sweep (vary dt):
     parser.add_argument('--restart-file',   metavar='FILE')
     parser.add_argument('--restart-record', type=int,   default=-1)
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     prm = QGParams.from_file(args.prmfile) if args.prmfile else QGParams()
 
@@ -744,3 +747,7 @@ Stability sweep (vary dt):
 
     model = QGModel(prm)
     model.run(ic=args.ic, **ic_kwargs)
+
+
+if __name__ == '__main__':
+    main()
